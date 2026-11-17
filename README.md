@@ -40,6 +40,8 @@ torch_model = sk2torch.wrap(model)
 print(torch_model.predict(torch.tensor([[1., 2., 3.]]).double()))
 ```
 
+`OneVsRestClassifier` is wrapped the same way: its fitted binary estimators must also be supported. `predict` returns the original class labels (a tensor for numeric labels, a list for strings), or a dense indicator tensor for multilabel models. `decision_function` and `predict_proba` return tensors when supported by the base estimator. `HistGradientBoostingClassifier` supports dense numeric features, including NaNs, but not categorical features.
+
 You can save a model with TorchScript:
 
 ```python
