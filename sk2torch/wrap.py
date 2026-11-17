@@ -8,6 +8,7 @@ from .gradient_boosting import (
     TorchGradientBoostingClassifier,
     TorchGradientBoostingRegressor,
 )
+from .hist_gradient_boosting import TorchHistGradientBoostingClassifier
 from .label_binarizer import TorchLabelBinarizer
 from .linear_model import (
     TorchLinearClassifier,
@@ -16,6 +17,7 @@ from .linear_model import (
     TorchSGDClassifier,
 )
 from .min_max_scaler import TorchMinMaxScaler
+from .multiclass import TorchOneVsRestClassifier
 from .nn import TorchMLPClassifier, TorchMLPRegressor
 from .nystroem import TorchNystroem
 from .pca import TorchPCA
@@ -35,6 +37,7 @@ _REGISTRY = [
     TorchDummyRegressor,
     TorchGradientBoostingClassifier,
     TorchGradientBoostingRegressor,
+    TorchHistGradientBoostingClassifier,
     TorchLabelBinarizer,
     TorchLinearClassifier,
     TorchLinearRegression,
@@ -43,6 +46,7 @@ _REGISTRY = [
     TorchMLPRegressor,
     TorchMinMaxScaler,
     TorchNystroem,
+    TorchOneVsRestClassifier,
     TorchPCA,
     TorchPipeline,
     TorchSGDClassifier,
