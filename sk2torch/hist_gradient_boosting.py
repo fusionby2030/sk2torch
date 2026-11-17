@@ -6,6 +6,8 @@ import torch.nn as nn
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.utils.validation import check_is_fitted
 
+from .tree import _packed_leaf_indices
+
 
 class TorchHistGradientBoostingClassifier(nn.Module):
     """Inference on dense numerical features in sklearn's original column order.
@@ -96,15 +98,10 @@ class TorchHistGradientBoostingClassifier(nn.Module):
 
     def _raw_chunk(self, x: torch.Tensor) -> torch.Tensor:
         n = x.size(0)
-        node = self.roots.repeat(n)
-        for _ in range(self.max_depth):
-            feature = self.feature.index_select(0, node).view(n, -1)
-            v = x.gather(1, feature).flatten()
-            go_left = torch.where(
-                v.isnan(), self.missing_left.index_select(0, node),
-                v <= self.threshold.index_select(0, node),
-            )
-            node = torch.where(go_left, self.left.index_select(0, node), self.right.index_select(0, node))
+        node = _packed_leaf_indices(
+            x, self.roots, self.max_depth, self.feature, self.threshold,
+            self.missing_left, self.left, self.right,
+        )
 
         # Leaf values already include shrinkage. Include the baseline as the
         # first term (not after a tree reduction) to retain sklearn's sum order.
