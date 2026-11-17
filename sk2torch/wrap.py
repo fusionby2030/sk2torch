@@ -4,6 +4,7 @@ import torch.nn as nn
 from sklearn.base import BaseEstimator
 
 from .dummy import TorchDummyClassifier, TorchDummyRegressor
+from .extra_trees import TorchExtraTreesRegressor
 from .gradient_boosting import (
     TorchGradientBoostingClassifier,
     TorchGradientBoostingRegressor,
@@ -35,6 +36,7 @@ _REGISTRY = [
     TorchDecisionTreeRegressor,
     TorchDummyClassifier,
     TorchDummyRegressor,
+    TorchExtraTreesRegressor,
     TorchGradientBoostingClassifier,
     TorchGradientBoostingRegressor,
     TorchHistGradientBoostingClassifier,

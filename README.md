@@ -42,6 +42,8 @@ print(torch_model.predict(torch.tensor([[1., 2., 3.]]).double()))
 
 `OneVsRestClassifier` is wrapped the same way: its fitted binary estimators must also be supported. `predict` returns the original class labels (a tensor for numeric labels, a list for strings), or a dense indicator tensor for multilabel models. `decision_function` and `predict_proba` return tensors when supported by the base estimator. `HistGradientBoostingClassifier` supports dense numeric features, including NaNs, but not categorical features.
 
+`ExtraTreesRegressor` supports dense numeric input. Both `torch_model(x)` and `torch_model.predict(x)` return a tensor of shape `(n_samples,)` for one target or `(n_samples, n_outputs)` for multiple targets. Keep the model's buffers in their original precision: sklearn rounds input features to float32 but uses float64 split thresholds.
+
 You can save a model with TorchScript:
 
 ```python

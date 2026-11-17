@@ -7,6 +7,30 @@ import torch.nn as nn
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
 
+def _packed_leaf_indices(
+    x: torch.Tensor,
+    roots: torch.Tensor,
+    depth: int,
+    feature: torch.Tensor,
+    threshold: torch.Tensor,
+    missing_left: torch.Tensor,
+    left: torch.Tensor,
+    right: torch.Tensor,
+) -> torch.Tensor:
+    """Traverse packed trees with self-loops on leaves, in (row, tree) order."""
+    n = x.size(0)
+    node = roots.repeat(n)
+    for _ in range(depth):
+        cols = feature.index_select(0, node).view(n, -1)
+        values = x.gather(1, cols).flatten()
+        go_left = torch.where(
+            values.isnan(), missing_left.index_select(0, node),
+            values <= threshold.index_select(0, node),
+        )
+        node = torch.where(go_left, left.index_select(0, node), right.index_select(0, node))
+    return node
+
+
 class BaseTree(nn.Module):
     def __init__(
         self,
